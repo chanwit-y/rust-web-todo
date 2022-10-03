@@ -1,0 +1,8 @@
+{
+  "name": "frontend",
+  "description": "TodoMVC frontend",
+  "type": "module",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT"
+}
