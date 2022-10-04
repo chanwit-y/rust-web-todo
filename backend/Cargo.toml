@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = {version = "1", featrues = ["full", "m"]}
+tokio = { version = "1", features = ["full"] }
 futures = "0.3"
 thiserror = "1.0"
 # JSON libs
@@ -16,5 +16,5 @@ serde_derive = "1.0"
 # Web libs
 warp = "0.3"
 # DB libs
-sqlx = {version = "0.6.2", featrues = ["runtime-tokio-rustls", "postgres"]}
+sqlx = {version = "0.6", featrues = ["runtime-tokio-rustls", "postgres"]}
 sqlb = "0.0.8"

@@ -1,7 +1,10 @@
+
 mod model;
 mod security;
 mod web;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     println!("Hello, world!");
+    
 }
