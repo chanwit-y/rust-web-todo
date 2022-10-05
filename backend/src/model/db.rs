@@ -12,25 +12,27 @@ const SQL_RECREATE: &str = "sql/00-recreate-db.sql";
 pub type Db = Pool<Postgres>;
 
 pub async fn init_db() -> Result<Db, sqlx::Error> {
-    {
-        let root_db = new_db_pool(PG_HOST, PG_DB, PG_USER, PG_PWD, 1).await?;
-        pexec(&root_db, SQL_RECREATE).await?;
-    }
-    let app_db = new_db_pool(PG_HOST, PG_DB, PG_USER, PG_PWD, 1).await?;
-    let mut paths: Vec<PathBuf> = fs::read_dir(SQL_DIR)?
-        .into_iter()
-        .filter_map(|e| e.ok().map(|e| e.path()))
-        .collect();
+    // {
+    //     let root_db = new_db_pool(PG_HOST, PG_DB, PG_USER, PG_PWD, 1).await?;
+    //     pexec(&root_db, SQL_RECREATE).await?;
+    // }
 
-    paths.sort();
+    // let app_db = new_db_pool(PG_HOST, PG_DB, PG_USER, PG_PWD, 1).await?;
+    // let mut paths: Vec<PathBuf> = fs::read_dir(SQL_DIR)?
+    //     .into_iter()
+    //     .filter_map(|e| e.ok().map(|e| e.path()))
+    //     .collect();
 
-    for path in paths {
-        if let Some(path) = path.to_str() {
-            if path.ends_with(".sql") && path != SQL_RECREATE {
-                pexec(&app_db, &path).await?;
-            }
-        }
-    }
+    // paths.sort();
+
+    // for path in paths {
+    //     if let Some(path) = path.to_str() {
+    //         // if path.ends_with(".sql") && path != SQL_RECREATE {
+    //         if path.ends_with(".sql")  {
+    //             pexec(&app_db, &path).await?;
+    //         }
+    //     }
+    // }
 
     new_db_pool(PG_HOST, PG_DB, PG_USER, PG_PWD, 1).await
 }

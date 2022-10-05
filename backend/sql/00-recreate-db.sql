@@ -5,4 +5,4 @@ DROP DATABASE IF EXISTS pg_demo;
 
 -- DEV ONLY - for quick iteration
 -- CREATE USER app_user PASSWORD 'app_pwd_to_change';
-CREATE DATABASE pg_demo --owner app_user ENCODING = 'UTF-8';
+CREATE DATABASE pg_demo; --owner app_user ENCODING = 'UTF-8';
