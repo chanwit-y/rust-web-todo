@@ -1,4 +1,4 @@
-use crate::model::db::init_db;
+use crate::{model::db::init_db, security::utx_from_token};
 
 use super::{TodoMac, TodoPatch};
 
@@ -10,7 +10,8 @@ async fn model_todo_create() -> Result<(), Box<dyn std::error::Error>> {
         ..Default::default()
     };
 
-    let todo_created = TodoMac::create(&db, data_fx.clone()).await?;
+    let utx = utx_from_token("123").await?;
+    let todo_created = TodoMac::create(&db, &utx, data_fx.clone()).await?;
     println!("\n\n->> {:?}", todo_created);
     assert!(todo_created.id >= 1000, "Id should be >= 1000");
     assert_eq!(data_fx.title.unwrap(), todo_created.title);
@@ -22,7 +23,8 @@ async fn model_todo_create() -> Result<(), Box<dyn std::error::Error>> {
 async fn model_todo_list() -> Result<(), Box<dyn std::error::Error>> {
     let db = init_db().await?;
 
-    let todos = TodoMac::list(&db).await?;
+    let utx = utx_from_token("123").await?;
+    let todos = TodoMac::list(&db, &utx).await?;
 
     assert!(todos.len() > 0, "todos len should be > 0");
 //     assert_eq!(2, todos.len());
