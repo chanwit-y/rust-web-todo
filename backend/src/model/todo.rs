@@ -32,6 +32,11 @@ sqlb::bindable!(TodoStatus);
 pub struct TodoMac;
 
 impl TodoMac {
+    const TABLE: &'static str = "todo";
+    const COLUMNS: &'static [&'static str] = &["id", "cid", "title", "status"];
+}
+
+impl TodoMac {
     pub async fn create(db: &Db, utx: &UserCtx, data: TodoPatch) -> Result<Todo, model::Error> {
         // let sql = "insert into todo (cid, title) values ($1,$2) returning id, cid, title";
         // let query = sqlx::query_as::<_, Todo>(&sql)
@@ -43,9 +48,38 @@ impl TodoMac {
         fields.push(("cid", 123).into());
 
         let sb = sqlb::insert()
-            .table("todo")
+            .table(Self::TABLE)
             .data(fields)
-            .returning(&["id", "cid", "title", "status"]);
+            .returning(Self::COLUMNS);
+
+        let todo = sb.fetch_one(db).await?;
+
+        Ok(todo)
+    }
+
+    pub async fn get(db: &Db, _utx: &UserCtx, id: i64) -> Result<Todo, model::Error> {
+        let sb = sqlb::select()
+            .table(Self::TABLE)
+            .columns(Self::COLUMNS)
+            .and_where_eq("id", id);
+
+        let todo = sb.fetch_one(db).await?;
+
+        Ok(todo)
+    }
+
+    pub async fn update(
+        db: &Db,
+        _utx: &UserCtx,
+        id: i64,
+        data: TodoPatch,
+    ) -> Result<Todo, model::Error> {
+
+        let sb = sqlb::update()
+            .table(Self::TABLE)
+            .data(data.fields())
+            .and_where_eq("id", id)
+            .returning(Self::COLUMNS);
 
         let todo = sb.fetch_one(db).await?;
 
@@ -59,8 +93,8 @@ impl TodoMac {
         // let todos = query.fetch_all(db).await?;
 
         let sb = sqlb::select()
-            .table("todo")
-            .columns(&["id", "cid", "title", "status"])
+            .table(Self::TABLE)
+            .columns(Self::COLUMNS)
             .order_by("!id");
 
         let todos = sb.fetch_all(db).await?;

@@ -20,6 +20,35 @@ async fn model_todo_create() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tokio::test]
+async fn model_todo_get() -> Result<(), Box<dyn std::error::Error>> {
+    let db = init_db().await?;
+
+    let id = 100;
+    let utx = utx_from_token("123").await?;
+    let todo = TodoMac::get(&db, &utx, id).await?;
+
+    assert!(todo.id == id, "todos id should be = 100");
+
+    Ok(())
+}
+
+#[tokio::test]
+async fn model_todo_update() -> Result<(), Box<dyn std::error::Error>> {
+    let db = init_db().await?;
+
+    let data_fx = TodoPatch {
+        title: Some("test - model_todo_update 1000".to_string()),
+        ..Default::default()
+    };
+    let utx = utx_from_token("123").await?;
+    let todo = TodoMac::update(&db, &utx, 1000, data_fx).await?;
+
+    assert!(todo.title == "test - model_todo_update 1000", "todo title should be 'test - model_todo_update 1000'");
+
+    Ok(())
+}
+
+#[tokio::test]
 async fn model_todo_list() -> Result<(), Box<dyn std::error::Error>> {
     let db = init_db().await?;
 
