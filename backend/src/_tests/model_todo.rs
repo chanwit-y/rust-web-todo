@@ -20,7 +20,7 @@ async fn model_todo_create() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tokio::test]
-async fn model_todo_get() -> Result<(), Box<dyn std::error::Error>> {
+async fn model_todo_get_ok() -> Result<(), Box<dyn std::error::Error>> {
     let db = init_db().await?;
 
     let id = 100;
@@ -28,6 +28,18 @@ async fn model_todo_get() -> Result<(), Box<dyn std::error::Error>> {
     let todo = TodoMac::get(&db, &utx, id).await?;
 
     assert!(todo.id == id, "todos id should be = 100");
+
+    Ok(())
+}
+
+#[tokio::test]
+async fn model_todo_get_wong_id() -> Result<(), Box<dyn std::error::Error>> {
+    let db = init_db().await?;
+
+    let utx = utx_from_token("123").await?;
+    let result = TodoMac::get(&db, &utx, 999).await;
+
+    print!("\n --> {:?}", result);
 
     Ok(())
 }
