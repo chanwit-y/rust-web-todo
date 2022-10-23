@@ -6,6 +6,11 @@
 ```sh
 cargo binstall cargo-watch
 ```
+## Deb Web
+```sh
+cargo watch -q -c -w src/ -x 'run -- ../frontend/web-folder'
+```
+
 ### for run test after save file
 ```sh
 cargo watch -q -c -w src/ -x 'test model_db_ -- --test-threads=1 --nocapture'

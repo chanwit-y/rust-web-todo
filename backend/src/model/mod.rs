@@ -4,16 +4,17 @@ mod db;
 mod todo;
 
 // re-export
-pub use db::Db;
 pub use db::init_db;
+pub use db::Db;
+pub use todo::{Todo, TodoMac, TodoPatch, TodoStatus};
 
 #[derive(ThisError, Debug)]
 pub enum Error {
-	#[error("Entity Not Found - {0}[{1}]")]
-	EntityNoFound(&'static str, String),
+    #[error("Entity Not Found - {0}[{1}]")]
+    EntityNoFound(&'static str, String),
 
-	#[error(transparent)]
-	SqlxError(#[from] sqlx::Error),
-	#[error(transparent)]
-	IOError(#[from] std::io::Error),
+    #[error(transparent)]
+    SqlxError(#[from] sqlx::Error),
+    #[error(transparent)]
+    IOError(#[from] std::io::Error),
 }
